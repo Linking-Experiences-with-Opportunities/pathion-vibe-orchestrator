@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '../styles/viz-debug.css';
+
+@layer base {
+  :root {
+    /* Dark Mode Variables */
+    --primary-color: #060606;
+    /* Dark Charcoal Background */
+    --text-color: #E2E8F0;
+    /* Light Grayish Blue Text */
+    --secondary-color: #333339;
+    /* Gray */
+    --accent-color: #48BB78;
+    /* Soft Green */
+    --error-color: #E53E3E;
+    /* Soft Red */
+
+    --sidebar-bg: #060606;
+    --input-bg: rgb(30 41 59);
+
+    /* Text Color */
+    --primary-text-color: #FFFFFF;
+    /* White Text */
+    --secondary-text-color: #A1A1AA;
+    /* Grayish Text */
+    --tertiary-text-color: #71717A;
+    /* Darker Gray Text */
+
+    /* Container color variables */
+    --primary-container-color: #18181B;
+    --secondary-container-color: #27272A;
+    --tertiary-container-color: #3F3F46;
+    --primary-border-color: #52525B;
+
+    /* Viz canvas tokens */
+    --canvas-void: #0c0c0e;
+    --structure-zinc: #27272a;
+    --tech-cyan: #22d3ee;
+    --danger-red: #ef4444;
+  }
+
+  [data-theme="light"] {
+    /* Light Mode Variables */
+    --primary-color: #F7FAFC;
+    /* Very Light Gray Background */
+    --text-color: #2D3748;
+    /* Dark Charcoal Text */
+    --secondary-color: #2D3748;
+    /* Deep Charcoal */
+    --accent-color: #38A169;
+    /* Slightly Brighter Green */
+    --error-color: #C53030;
+    /* Deeper Red */
+
+    --sidebar-bg: #E2E8F0;
+    --input-bg: rgb(226, 232, 240);
+
+    /* Text Color */
+    --primary-text-color: #18181B;
+    --secondary-text-color: #4A5568;
+    --tertiary-text-color: #A1A1AA;
+
+    /* Container color variables */
+    --primary-container-color: #F7FAFC;
+    --secondary-container-color: #E2E8F0;
+    --tertiary-container-color: #D1D5DB;
+    --primary-border-color: #A1A1AA;
+  }
+}
+
+body {
+  background-color: var(--primary-color);
+  color: var(--text-color);
+}
+
+input {
+  background: var(--input-bg);
+}
+
+/* Custom Scrollbar Styles */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.7);
+}
+
+/* Firefox scrollbar support */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 116, 139, 0.5) rgba(15, 23, 42, 0.5);
+}
+
+/* Thin Cyber Scrollbar (User Requested) */
+.scrollbar-thin::-webkit-scrollbar {
+  height: 6px; /* Horizontal scrollbar height */
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #334155; /* slate-700 */
+  border-radius: 9999px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: #38bdf8; /* cyan-400 highlight on hover */
+}
+
+/* PWA Window Controls Overlay - allows custom title bar */
+.app-titlebar {
+  /* Make the element draggable like a native title bar */
+  -webkit-app-region: drag;
+  app-region: drag;
+
+  /* Account for the window controls (minimize, maximize, close buttons) */
+  padding-left: env(titlebar-area-x, 0);
+  padding-right: calc(100% - env(titlebar-area-width, 100%) - env(titlebar-area-x, 0));
+  min-height: env(titlebar-area-height, auto);
+}
+
+/* Make interactive elements clickable (not draggable) */
+.app-titlebar button,
+.app-titlebar a,
+.app-titlebar input,
+.app-titlebar select,
+.app-titlebar [role="button"] {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+/* Error screen animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Radial gradient utility for error screen */
+.bg-radial-gradient {
+  background: radial-gradient(ellipse at center, var(--tw-gradient-from) 0%, var(--tw-gradient-via) 50%, var(--tw-gradient-to) 100%);
+}

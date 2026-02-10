@@ -1,0 +1,25 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./Dockerfile.dev
+    container_name: questions-api-backend
+    env_file:
+      - .env
+    environment:
+      GIT_COMMIT_SHA: ${GIT_COMMIT_SHA:-local}
+      DEPLOYED_AT: ${DEPLOYED_AT:-local}
+    volumes:
+      - ./handlers:/app/handlers
+      - ./routes:/app/routes
+      - ./database:/app/database
+      - ./shared:/app/shared
+      - ./config:/app/config
+    ports:
+      - "1323:1323"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    external: true

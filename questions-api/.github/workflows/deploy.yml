@@ -1,0 +1,56 @@
+name: Build and Deploy to App Runner (Staging)
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-west-2
+  AWS_ACCOUNT_ID: "590183995854"
+  ECR_REPOSITORY: questions-api
+  APP_RUNNER_ARN: arn:aws:apprunner:us-west-2:590183995854:service/staging/9ac15bcb148442ba9bdf21614ca0bfaf
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_STAGING }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_STAGING }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image to Amazon ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          no-cache: true
+          build-args: |
+            GIT_COMMIT_SHA=${{ github.sha }}
+            DEPLOYED_AT=${{ github.event.head_commit.timestamp }}
+          tags: |
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:latest
+            ${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy updated image to App Runner
+        run: |
+          ECR_IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}"
+          aws apprunner update-service \
+            --service-arn ${{ env.APP_RUNNER_ARN }} \
+            --source-configuration "ImageRepository={ImageIdentifier=${ECR_IMAGE_URI},ImageRepositoryType=ECR}"
+
+
+

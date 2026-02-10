@@ -1,0 +1,46 @@
+import React from 'react';
+import {
+  Terminal,
+  AlertCircle,
+  CheckCircle2,
+  XCircle,
+  Play,
+  Clock,
+  ChevronRight,
+  ChevronDown,
+  Layout,
+  Bug,
+  Activity,
+  SkipForward,
+  Square,
+  ArrowDown,
+  RotateCcw,
+  Hash,
+  Pencil,
+  Sword,
+  List,
+  FileCode
+} from 'lucide-react';
+
+export const Icons = {
+  Terminal,
+  AlertCircle,
+  CheckCircle: CheckCircle2,
+  XCircle,
+  Play,
+  Clock,
+  ChevronRight,
+  ChevronDown,
+  Layout,
+  Bug,
+  Activity,
+  SkipForward,
+  Square,
+  StepInto: ArrowDown,
+  Restart: RotateCcw,
+  Variable: Hash,
+  Pencil,
+  Sword,
+  List,
+  FileCode
+};

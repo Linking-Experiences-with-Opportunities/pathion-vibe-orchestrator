@@ -1,0 +1,163 @@
+/* --- Viz container (canvas + grid) --- */
+.viz-container {
+  background-color: var(--canvas-void);
+  border: 1px solid var(--structure-zinc);
+  background-image: radial-gradient(var(--tech-cyan) 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+}
+
+/* --- Base Node (The "Chip" Look) --- */
+.ds-node {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Typography */
+  font-family: 'JetBrains Mono', 'Fira Code', monospace; /* Tech vibe */
+  font-size: 0.75rem; /* Smaller, sharper text */
+  font-weight: 700;
+  color: #e2e8f0; /* slate-200 */
+  letter-spacing: -0.02em;
+
+  /* Shape */
+  width: 50px;
+  height: 50px;
+  border-radius: 12px; /* Squircle > Circle for data structures */
+  
+  /* The "Vibe" Gradient & Depth */
+  background: linear-gradient(145deg, #1e293b, #0f172a); /* Subtle gradient */
+  border: 1px solid rgba(51, 65, 85, 0.8); /* Semi-transparent border */
+  
+  /* Lighting Effects */
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.5),      /* Drop shadow */
+    inset 0 1px 0 rgba(255, 255, 255, 0.1); /* Top edge highlight (glass feel) */
+  
+  transition: all 0.2s ease;
+}
+
+/* --- Interaction States --- */
+.ds-node:hover {
+  transform: translateY(-1px);
+  border-color: #94a3b8;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* --- Active / Visited (The "Lit" State) --- */
+.ds-node--active,
+.graph-node--visited {
+  background: linear-gradient(145deg, #065f46, #064e3b); /* Emerald Gradient */
+  border-color: #34d399; /* Emerald-400 border */
+  color: #ffffff;
+  box-shadow: 
+    0 0 15px rgba(16, 185, 129, 0.3), /* Outer Green Glow */
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* --- Violation / Error (The "Danger" State) --- */
+.ds-node--violation,
+.graph-node--cycle {
+  background: linear-gradient(145deg, #450a0a, #7f1d1d); /* Red/Amber Gradient */
+  border-color: #f87171; /* Red-400 */
+  color: #fff;
+  box-shadow: 
+    0 0 20px rgba(239, 68, 68, 0.4), /* Pulse Glow */
+    inset 0 0 10px rgba(0, 0, 0, 0.5);
+  animation: pulse-violation 2s infinite;
+}
+
+/* --- Empty / Ghost State (For Nulls) --- */
+.ds-node--empty,
+.unreachable {
+  background: transparent;
+  border: 2px dashed #475569; /* Dashed Slate */
+  color: #64748b;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
+/* --- Edges (Connectors) --- */
+.ds-edge {
+  stroke: #64748b;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); /* Adds depth to lines */
+}
+
+.ds-edge--violation {
+  stroke: #ef4444;
+  stroke-width: 3px;
+  stroke-dasharray: 6 3; /* More aggressive dash */
+  animation: dash-flow 1s linear infinite; /* Moving ants effect */
+}
+
+/* --- Keyframes --- */
+@keyframes pulse-violation {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+@keyframes dash-flow {
+  to { stroke-dashoffset: -9; }
+}
+
+/* --- Mermaid SVG Overrides (Cyber-Industrial for diagram shapes) --- */
+/* Mermaid renders SVG; box-shadow/border on .node don't apply. Target the shapes inside. */
+.mermaid-container .node rect,
+.mermaid-container .node circle,
+.mermaid-container .node polygon {
+  fill: #1e293b !important;
+  stroke: #475569 !important;
+  stroke-width: 2px !important;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+.mermaid-container .node rect {
+  rx: 12px !important;
+  ry: 12px !important;
+}
+
+.mermaid-container .node .label {
+  font-family: 'JetBrains Mono', monospace !important;
+  fill: #e2e8f0 !important;
+}
+
+/* Visited / active state */
+.mermaid-container .node.graph-node--visited rect,
+.mermaid-container .node.graph-node--visited circle,
+.mermaid-container .node.graph-node--visited polygon {
+  fill: #064e3b !important;
+  stroke: #34d399 !important;
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+}
+
+/* Violation / cycle / danger state */
+.mermaid-container .node.graph-node--cycle rect,
+.mermaid-container .node.graph-node--cycle circle,
+.mermaid-container .node.graph-node--cycle polygon,
+.mermaid-container .node.meet-node rect,
+.mermaid-container .node.meet-node circle,
+.mermaid-container .node.meet-node polygon {
+  stroke: #ef4444 !important;
+  fill: #450a0a !important;
+  filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.6));
+}
+
+/* Empty / null node (HEAD → ∅) */
+.mermaid-container .node.null-node rect,
+.mermaid-container .node.null-node circle,
+.mermaid-container .node.null-node polygon {
+  fill: none !important;
+  stroke: #ef4444 !important;
+  stroke-width: 2px !important;
+}
+
+/* Unreachable (ghost) */
+.mermaid-container .node.unreachable rect,
+.mermaid-container .node.unreachable circle,
+.mermaid-container .node.unreachable polygon {
+  fill: #1e293b !important;
+  stroke: #64748b !important;
+  stroke-dasharray: 5 5;
+  opacity: 0.6;
+}
